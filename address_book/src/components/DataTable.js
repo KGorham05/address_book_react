@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import API from "../utils/API";
-// import DataHeaders from "./DataHeaders";
-// import DataBody from "./DataBody";
+import DataBody from "./DataBody";
 
 
 class DataTable extends Component {
@@ -11,24 +10,46 @@ class DataTable extends Component {
     filteredUsers: [],
     order: "descend"
   };
+
+  headings = [
+    {name: "Image"},
+    {name: "Name"},
+    {name: "Email"},
+    {name: "Phone"},
+    {name: "DOB"}
+  ];
   
   componentDidMount() {
     this.getUserData();
   }
 
   getUserData = () => {
-    API.getUsers().then(usersData => this.setState({users: usersData}, () => {
-      console.log(this.state.users)
-    }))
+    API.getUsers().then(usersData => this.setState({users: usersData.data.results}, () => console.log(this.state.users)))
   }
   
   render() {
     return (
-      <>
-        {/* Map over User Keys for Table Headtings */}
-        {/* <DataBody /> */}
-        <h1>Data goes here</h1>
-      </>
+      <table>
+        <thead>
+          <tr>
+            {this.headings.map(heading => {
+              console.log(heading);
+              return <th>{heading.name}</th>
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {this.state.users.map(user => {
+            return <DataBody 
+              name = {user.name}
+              image = {user.picture.thumbnail}
+              email = {user.email}
+              phone = {user.phone}
+              dob = {user.dob.date}
+            />
+          })}
+        </tbody>
+      </table>
     )
   }
 
