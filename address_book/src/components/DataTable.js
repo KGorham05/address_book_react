@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import API from "../utils/API";
 import DataBody from "./DataBody";
 
+// TO DO -> when sorting, check this.state.order. If "asc" do nothing, if "desc" add "-" to property we are filtering on
+
 class DataTable extends Component {
   state = {
     users: [],
