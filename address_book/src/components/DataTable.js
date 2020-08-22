@@ -26,21 +26,16 @@ class DataTable extends Component {
       this.setState({
         users: usersData.data.results.slice(0, 10),
         filteredUsers: usersData.data.results.slice(0, 10),
-      }, () => {
-        let updatedUserArr = this.state.filteredUsers.map((user) => {
-          user.age = user.dob.age;
-          user.lastName = user.name.last;
-        })
-        this.setState({filteredUsers: updatedUserArr});
       });
     });
   };
 
-  filterThisColumn = () => {
+  filterThisColumn = (e) => {
     // figure out which column we are filtering the data on
     // create a new array to hold sorted data
     // call .sort() on that value to order the array by that key
-    const columnToFilterOn = event.target.innerText;
+    console.log(e.target.innerText)
+    const columnToFilterOn = e.target.innerText;
     let filteredUsers = this.state.filteredUsers;
 
     switch (columnToFilterOn) {
@@ -100,7 +95,6 @@ class DataTable extends Component {
               </thead>
               <tbody>
                 {this.state.filteredUsers.map((user) => {
-                  console.log(user)
                   return (
                     <DataBody
                       name={user.name}
