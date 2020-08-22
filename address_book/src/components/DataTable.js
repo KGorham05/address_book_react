@@ -23,6 +23,11 @@ class DataTable extends Component {
 
   getUserData = () => {
     API.getUsers().then((usersData) => {
+      usersData.data.results.slice(0, 10).map(userObj => {
+        console.log(userObj);
+        userObj.lastName = userObj.name.last;
+        userObj.age = userObj.dob.age.toString();
+      })
       this.setState({
         users: usersData.data.results.slice(0, 10),
         filteredUsers: usersData.data.results.slice(0, 10),
@@ -30,11 +35,29 @@ class DataTable extends Component {
     });
   };
 
-  filterThisColumn = (e) => {
+  dynamicSort = (property) => {
+    var sortOrder = 1;
+
+    if (property[0] === "-") {
+      sortOrder = -1;
+      property = property.substr(1);
+    }
+
+    return function (a, b) {
+      console.log(a)
+      console.log(b)
+      if (sortOrder == -1) {
+        return b[property].localeCompare(a[property]);
+      } else {
+        return a[property].localeCompare(b[property]);
+      }
+    };
+  };
+
+  filterThisColumn = e => {
     // figure out which column we are filtering the data on
     // create a new array to hold sorted data
     // call .sort() on that value to order the array by that key
-    console.log(e.target.innerText)
     const columnToFilterOn = e.target.innerText;
     let filteredUsers = this.state.filteredUsers;
 
@@ -59,22 +82,7 @@ class DataTable extends Component {
     this.setState({ filteredUsers: filteredUsers });
   };
 
-  dynamicSort = (property) => {
-    var sortOrder = 1;
 
-    if (property[0] === "-") {
-      sortOrder = -1;
-      property = property.substr(1);
-    }
-
-    return function (a, b) {
-      if (sortOrder == -1) {
-        return b[property].localeCompare(a[property]);
-      } else {
-        return a[property].localeCompare(b[property]);
-      }
-    };
-  };
 
   render() {
     return (
