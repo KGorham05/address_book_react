@@ -23,14 +23,16 @@ class DataTable extends Component {
 
   getUserData = () => {
     API.getUsers().then((usersData) => {
-
-      let arr = usersData.map(user => {
-        
-      })
-      this.setState({ 
-        users: usersData.data.results.slice(0, 10), 
-        filteredUsers:  usersData.data.results.slice(0, 10)
-      })
+      this.setState({
+        users: usersData.data.results.slice(0, 10),
+        filteredUsers: usersData.data.results.slice(0, 10),
+      }, () => {
+        let updatedUserArr = this.state.filteredUsers.map((user) => {
+          user.age = user.dob.age;
+          user.lastName = user.name.last;
+        })
+        this.setState({filteredUsers: updatedUserArr});
+      });
     });
   };
 
@@ -40,9 +42,26 @@ class DataTable extends Component {
     // call .sort() on that value to order the array by that key
     const columnToFilterOn = event.target.innerText;
     let filteredUsers = this.state.filteredUsers;
-    filteredUsers.sort(this.dynamicSort("gender"));
-    console.log(filteredUsers);
-    this.setState({filteredUsers: filteredUsers})
+
+    switch (columnToFilterOn) {
+      case "Name":
+        filteredUsers.sort(this.dynamicSort("lastName"))
+        break;
+      case "Email":
+        filteredUsers.sort(this.dynamicSort("email"));
+        break;
+      case "Phone":
+        filteredUsers.sort(this.dynamicSort("phone"));
+        break;
+      case "DOB":
+        filteredUsers.sort(this.dynamicSort("age"));
+        break;
+      case "Image":
+        filteredUsers.sort(this.dynamicSort("gender"));
+        break;
+    }
+
+    this.setState({ filteredUsers: filteredUsers });
   };
 
   dynamicSort = (property) => {
@@ -81,6 +100,7 @@ class DataTable extends Component {
               </thead>
               <tbody>
                 {this.state.filteredUsers.map((user) => {
+                  console.log(user)
                   return (
                     <DataBody
                       name={user.name}
