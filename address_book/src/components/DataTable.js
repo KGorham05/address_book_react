@@ -8,6 +8,7 @@ class DataTable extends Component {
   state = {
     users: [],
     filteredUsers: [],
+    filterText: '',
     order: "asc",
   };
 
@@ -62,10 +63,19 @@ class DataTable extends Component {
     // call .sort() on that value to order the array by that key
     const columnToFilterOn = e.target.innerText;
     let filteredUsers = this.state.filteredUsers;
+    let sortOrder = this.state.order;
+    let keyBeingFilteredOn = ""
 
     switch (columnToFilterOn) {
       case "Name":
-        filteredUsers.sort(this.dynamicSort("lastName"))
+        if (this.state.order = "desc") {
+          keyBeingFilteredOn = "-" + keyBeingFilteredOn;
+          filteredUsers.sort(this.dynamicSort("lastName"))
+          this.setState({order: "asc"})
+        } else {
+          filteredUsers.sort(this.dynamicSort("-lastName"))
+          this.setState({order: "desc"})
+        }
         break;
       case "Email":
         filteredUsers.sort(this.dynamicSort("email"));
@@ -84,7 +94,11 @@ class DataTable extends Component {
     this.setState({ filteredUsers: filteredUsers });
   };
 
-
+  handleFilterTextChange(filterText) {
+    this.setState({
+      filterText: filterText
+    });
+  };
 
   render() {
     return (
